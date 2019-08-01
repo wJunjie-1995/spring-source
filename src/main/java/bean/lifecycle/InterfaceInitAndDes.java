@@ -9,12 +9,16 @@ import org.springframework.stereotype.Component;
  * @date 2019/8/1 17:00
  */
 @Component
-public class InterfaceImpl implements InitializingBean, DisposableBean {
+public class InterfaceInitAndDes implements InitializingBean, DisposableBean {
+    public InterfaceInitAndDes() {
+        System.out.println("接口方式 构造器");
+    }
+
     public void destroy() throws Exception {
-        System.out.println("cat destroy");
+        System.out.println("接口方式 destroy");
     }
 
     public void afterPropertiesSet() throws Exception {
-        System.out.println("cat init ");
+        System.out.println("接口方式 init ");
     }
 }
