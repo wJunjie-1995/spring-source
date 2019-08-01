@@ -1,4 +1,4 @@
-package bean;
+package bean.registry;
 
 /**
  * @author galileo

@@ -1,8 +1,5 @@
-import bean.Person;
 import config.MainConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.util.Map;
 
 /**
  * @author galileo

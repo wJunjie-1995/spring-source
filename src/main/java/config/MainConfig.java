@@ -1,8 +1,8 @@
 package config;
 
-import bean.Color;
-import bean.Person;
-import bean.Red;
+import bean.registry.Color;
+import bean.registry.Person;
+import bean.registry.Red;
 import condition.LinuxCondition;
 import condition.MyImportBeanDefinitionRegistrar;
 import condition.MyImportSelector;

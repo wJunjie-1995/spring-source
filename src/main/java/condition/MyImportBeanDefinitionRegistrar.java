@@ -1,6 +1,6 @@
 package condition;
 
-import bean.RainBow;
+import bean.registry.RainBow;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;

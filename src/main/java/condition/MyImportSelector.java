@@ -9,6 +9,6 @@ import org.springframework.core.type.AnnotationMetadata;
  */
 public class MyImportSelector implements ImportSelector {
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-        return new String[]{"bean.Blue"};
+        return new String[]{"bean.registry.Blue"};
     }
 }
