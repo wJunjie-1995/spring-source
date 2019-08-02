@@ -7,6 +7,14 @@ import org.springframework.stereotype.Component;
 /**
  * @author galileo
  * @date 2019/8/1 17:17
+ *
+ * 顺序：
+ * populateBean 为bean赋予属性值
+ * initializeBean{
+ * postProcessBeforeInitialization 初始化前
+ * init 自定义初始化方法
+ * postProcessAfterInitialization 初始化后
+ * }
  */
 @Component
 public class MyBeanPostProcessor implements BeanPostProcessor {
