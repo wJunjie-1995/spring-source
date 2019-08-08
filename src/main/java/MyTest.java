@@ -2,7 +2,10 @@ import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
+import bean.autowire.BookDao;
+import bean.autowire.BookService;
 import bean.property.Liu;
+import config.AutowireConfig;
 import config.LifeCycleConfig;
 import config.MainConfig;
 import config.PropertyConfig;
@@ -54,4 +57,18 @@ public class MyTest {
         //关闭容器
         applicationContext.close();
     }
+
+	@Test
+	public void autowireTest(){
+		applicationContext =
+				new AnnotationConfigApplicationContext(AutowireConfig.class);
+
+		BookService bookService = applicationContext.getBean(BookService.class);
+		System.out.println(bookService);
+		BookDao bookDao = (BookDao) applicationContext.getBean("bookDao2");
+		System.out.println(bookDao);
+
+		//关闭容器
+		applicationContext.close();
+	}
 }
