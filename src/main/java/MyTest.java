@@ -1,7 +1,11 @@
-import config.LifeCycleConfig;
-import config.MainConfig;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.core.env.ConfigurableEnvironment;
+
+import bean.property.Liu;
+import config.LifeCycleConfig;
+import config.MainConfig;
+import config.PropertyConfig;
 
 /**
  * @author galileo
@@ -30,6 +34,23 @@ public class MyTest {
         System.out.println("容器创建ok");
         System.out.println("开始获取对象");
         applicationContext.getBean("car");
+        //关闭容器
+        applicationContext.close();
+    }
+
+    @Test
+    public void propertyTest(){
+        applicationContext =
+                new AnnotationConfigApplicationContext(PropertyConfig.class);
+        System.out.println("容器创建ok");
+        System.out.println("开始获取对象");
+        Liu liu = (Liu) applicationContext.getBean("liu");
+        System.out.println(liu.toString());
+
+        System.out.println("从运行环境中读取Property");
+        ConfigurableEnvironment environment = applicationContext.getEnvironment();
+        String property = environment.getProperty("liu.nickName");
+        System.out.println("liu.nickName:"+property);
         //关闭容器
         applicationContext.close();
     }
