@@ -1,7 +1,8 @@
 package bean.autowire;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import javax.inject.Inject;
 
 /**
  * @author galileo  .
@@ -10,12 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class BookService {
 
-	@Qualifier("bookDao")
-	private final BookDao bookDao;
+//	@Qualifier("bookDao")
+//	@Autowired
 
-	public BookService(BookDao bookDao) {
-		this.bookDao = bookDao;
-	}
+//	@Resource(name = "bookDao2")
+
+	@Inject
+	private BookDao bookDao;
 
 	@Override
 	public String toString() {
