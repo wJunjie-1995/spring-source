@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
 
 import bean.autowire.BookDao;
 
@@ -26,10 +27,17 @@ import bean.autowire.BookDao;
  *    	但是不能支持@Primary和require等功能
  *    2.@Inject需要导入javax.inject依赖，功能和@Autowire一样，
  *    	支持@Primary但是不支持require
+ * 3、自定义组件使用spring底层Bean（如：ApplicationContext、BeanFactory等），
+ * 		只需要自定义组件实现xxxAware即可：创建对象时，会根据接口对应的方法注入相关的组件。
+ * 	注：Aware接口，回调函数风格（Callable-style method），
+ * 		每一个xxxAware都一个对应的xxxProcessor（实现了BeanPostProcessor 后置处理器），
+ * 		如ApplicationContextAware==》ApplicationContextAwareProcessor，
+ *
  *
  */
 @Configurable
 @ComponentScan("bean.autowire")
+@PropertySource(value = "classpath:/property.properties",encoding = "UTF-8")
 public class AutowireConfig {
 
 	@Bean("bookDao2")
