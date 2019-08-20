@@ -1,3 +1,5 @@
+import bean.aop.MathCalculator;
+import config.*;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -5,10 +7,6 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import bean.autowire.BookDao;
 import bean.autowire.BookService;
 import bean.property.Liu;
-import config.AutowireConfig;
-import config.LifeCycleConfig;
-import config.MainConfig;
-import config.PropertyConfig;
 
 /**
  * @author galileo
@@ -71,4 +69,12 @@ public class MyTest {
 		//关闭容器
 		applicationContext.close();
 	}
+
+    @Test
+    public void aopTest(){
+        applicationContext =
+                new AnnotationConfigApplicationContext(AopConfig.class);
+        MathCalculator mathCalculator = applicationContext.getBean(MathCalculator.class);
+        mathCalculator.div(1,1);
+    }
 }
