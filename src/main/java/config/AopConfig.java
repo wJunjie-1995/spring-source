@@ -19,6 +19,26 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  *  5、将切面类和业务逻辑类都加入到容器中
  *  6、告知Spring哪个类是切面类（@Aspect）
  *  [7!]、加上EnableAspectJAutoProxy，开启基于注解的切面模式
+ *
+ *  Aop原理：
+ *  EnableAspectJAutoProxy：
+ *  1、什么是EnableAspectJAutoProxy？
+ *      1）'@EnableAspectJAutoProxy'注解为容器导入了AspectJAutoProxyRegistrar：@Import(AspectJAutoProxyRegistrar.class)
+ *
+ *      而AspectJAutoProxyRegistrar 实现了接口 ImportBeanDefinitionRegistrar，使用BeanDefinitionRegistry
+ *          为容器添加了AspectJAnnotationAutoProxyCreator：“AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry);”
+ *      AopConfigUtils.registerOrEscalateApcAsRequired注册 AspectJAwareAdvisorAutoProxyCreator 类到容器中，其bean的名字
+ *          是internalAutoProxyCreator（AUTO_PROXY_CREATOR_BEAN_NAME = "org.springframework.aop.config.internalAutoProxyCreator"）
+ *      2）获取EnableAspectJAutoProxy注解的内容：proxyTargetClass和exposeProxy根据其值是true还是false做相应的操作
+ *  2、关键组件 AspectJAwareAdvisorAutoProxyCreator 解析：
+ *      继承关系：AspectJAwareAdvisorAutoProxyCreator
+ *              ->AspectJAwareAdvisorAutoProxyCreator
+ *              ->AbstractAdvisorAutoProxyCreator
+ *              ->AbstractAutoProxyCreator implements SmartInstantiationAwareBeanPostProcessor, BeanFactoryAware
+ *                  关注两个接口： 1）后置处理器接口 2）Bean自动装配接口 BeanFactory
+ *
+ *
+ *
  */
 @EnableAspectJAutoProxy
 @Configurable
