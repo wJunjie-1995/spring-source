@@ -37,7 +37,16 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  *              ->AbstractAutoProxyCreator implements SmartInstantiationAwareBeanPostProcessor, BeanFactoryAware
  *                  关注两个接口： 1）后置处理器接口 2）Bean自动装配接口 BeanFactory
  *
+ * 断点处：AbstractAutoProxyCreator.setBeanFactory()、
+ *       后置处理器逻辑：
+ *       AbstractAutoProxyCreator.postProcessBeforeInstantiation（Class<?> beanClass, String beanName）
+ *       AbstractAutoProxyCreator.postProcessAfterInitialization(Object bean, String beanName)
  *
+ *       AbstractAdvisorAutoProxyCreator.重写setBeanFactory() -> initBeanFactory(ConfigurableListableBeanFactory beanFactory)
+ *
+ *       AspectJAwareAdvisorAutoProxyCreator无
+ *
+ *       AspectJAwareAdvisorAutoProxyCreator.重写initBeanFactory(ConfigurableListableBeanFactory beanFactory)
  *
  */
 @EnableAspectJAutoProxy
