@@ -26,18 +26,19 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  *      1）'@EnableAspectJAutoProxy'注解为容器导入了AspectJAutoProxyRegistrar：@Import(AspectJAutoProxyRegistrar.class)
  *
  *      而AspectJAutoProxyRegistrar 实现了接口 ImportBeanDefinitionRegistrar，使用BeanDefinitionRegistry
- *          为容器添加了AspectJAnnotationAutoProxyCreator：“AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry);”
+ *          为容器添加了 AspectJAnnotationAutoProxyCreator：“AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry);”
  *      AopConfigUtils.registerOrEscalateApcAsRequired注册 AspectJAwareAdvisorAutoProxyCreator 类到容器中，其bean的名字
  *          是internalAutoProxyCreator（AUTO_PROXY_CREATOR_BEAN_NAME = "org.springframework.aop.config.internalAutoProxyCreator"）
  *      2）获取EnableAspectJAutoProxy注解的内容：proxyTargetClass和exposeProxy根据其值是true还是false做相应的操作
- *  2、关键组件 AspectJAwareAdvisorAutoProxyCreator 解析：
- *      继承关系：AspectJAwareAdvisorAutoProxyCreator
+ *  2、关键组件 AnnotationAwareAspectJAutoProxyCreator 解析：
+ *      继承关系：AnnotationAwareAspectJAutoProxyCreator
  *              ->AspectJAwareAdvisorAutoProxyCreator
  *              ->AbstractAdvisorAutoProxyCreator
  *              ->AbstractAutoProxyCreator implements SmartInstantiationAwareBeanPostProcessor, BeanFactoryAware
  *                  关注两个接口： 1）后置处理器接口 2）Bean自动装配接口 BeanFactory
  *
- * 断点处：AbstractAutoProxyCreator.setBeanFactory()、
+ * 断点处：
+ *       AbstractAutoProxyCreator.setBeanFactory()、
  *       后置处理器逻辑：
  *       AbstractAutoProxyCreator.postProcessBeforeInstantiation（Class<?> beanClass, String beanName）
  *       AbstractAutoProxyCreator.postProcessAfterInitialization(Object bean, String beanName)
@@ -46,8 +47,31 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  *
  *       AspectJAwareAdvisorAutoProxyCreator无
  *
- *       AspectJAwareAdvisorAutoProxyCreator.重写initBeanFactory(ConfigurableListableBeanFactory beanFactory)
+ *       AnnotationAwareAspectJAutoProxyCreator.重写initBeanFactory(ConfigurableListableBeanFactory beanFactory)
  *
+ *  调用流程：
+ *      1、传入配置类（AopConfig.class），创建IOC容器
+ *      2、注册配置类；调用refresh()刷新容器：即创建所有容器中的Bean、所有功能准备好
+ *      3、在refresh()中：registerBeanPostProcessors(beanFactory)，注册bean的后置处理器，来方便拦截bean的创建：
+ *          1）获取IOC容器中已经定义了的需要创建对象的所有BeanPostProcessor后置处理器
+ *              （beanFactory.getBeanNamesForType(BeanPostProcessor.class, true, false)）
+ *              注：注解‘@EnableAspectJAutoProxy’的Import一个注册类会引发一系列操作导致 AnnotationAwareAspectJAutoProxyCreator 传入后置处理器
+ *          2）在容器中添加了些其他的 BeanPostProcessor：beanFactory.
+ *              addBeanPostProcessor(new BeanPostProcessorChecker(beanFactory, beanProcessorTargetCount))
+ *          3）优先注册实现了PriorityOrdered的BeanPostProcessor、其次是Ordered、最后是什么都没实现的。
+ *              注：internalAutoProxyCreator，即 AnnotationAwareAspectJAutoProxyCreator，实现了Ordered接口。
+ *          4)注册 BeanPostProcessor，实际上就是创建 BeanPostProcessor对象，再保存在容器中；
+ *              创建internalAutoProxyCreator的BeanPostProcessor对象【AnnotationAwareAspectJAutoProxyCreator】：
+ *              1，创建bean实例：createBeanInstance(beanName, mbd, args);
+ *              2，为bean属性赋值：populateBean(beanName, mbd, instanceWrapper);
+ *              3，初始化bean：initializeBean(beanName, exposedObject, mbd)
+ *                  1,处理Aware接口方法回调，即实现了BeanFactoryAware需要 setBeanFactory，invokeAwareMethods(beanName, bean)
+ *                  2,应用后置处理器BeforeInitialization，applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName)
+ *                  3,执行初始化，invokeInitMethods(String beanName, final Object bean, RootBeanDefinition mbd)
+ *                  4,应用后置处理器AfterInitialization，applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
+ *              4，BeanPostProcessor【AnnotationAwareAspectJAutoProxyCreator】  创建成功 -->aspectJAdvisorsBuilder(？)
+ *           5）把BeanPostProcessor注册到beanFactory中：beanFactory.addBeanPostProcessor(postProcessor)
+ *      4、
  */
 @EnableAspectJAutoProxy
 @Configurable
