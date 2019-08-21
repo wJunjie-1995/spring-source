@@ -30,7 +30,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  *      AopConfigUtils.registerOrEscalateApcAsRequired注册 AspectJAwareAdvisorAutoProxyCreator 类到容器中，其bean的名字
  *          是internalAutoProxyCreator（AUTO_PROXY_CREATOR_BEAN_NAME = "org.springframework.aop.config.internalAutoProxyCreator"）
  *      2）获取EnableAspectJAutoProxy注解的内容：proxyTargetClass和exposeProxy根据其值是true还是false做相应的操作
- *  2、关键组件 AnnotationAwareAspectJAutoProxyCreator 解析：
+ *  2、关键组件 AnnotationAwareAspectJAutoProxyCreator （会在任何Bean创建之前先尝试返回Bean的实例）解析：
  *      继承关系：AnnotationAwareAspectJAutoProxyCreator
  *              ->AspectJAwareAdvisorAutoProxyCreator
  *              ->AbstractAdvisorAutoProxyCreator
@@ -71,7 +71,31 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  *                  4,应用后置处理器AfterInitialization，applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
  *              4，BeanPostProcessor【AnnotationAwareAspectJAutoProxyCreator】  创建成功 -->aspectJAdvisorsBuilder(？)
  *           5）把BeanPostProcessor注册到beanFactory中：beanFactory.addBeanPostProcessor(postProcessor)
- *      4、
+ *
+ *      =================以上为创建和注册 AnnotationAwareAspectJAutoProxyCreator 的过程==================
+ *
+ *      AnnotationAwareAspectJAutoProxyCreator 的后置处理器 -> postProcessBeforeInstantiation
+ *      4、完成bean的初始化：finishBeanFactoryInitialization(beanFactory)；创建剩下的单实例
+ *          1）遍历容器中所有的bean，依次创建对象getBean（beanName）
+ *              getBean()->doGetBean()->getSingleton()
+ *          2)创建bean
+ *          【AnnotationAwareAspectJAutoProxyCreator在所有Bean被创建之前都会有一个拦截，由于其实现了InstantiationAwareBeanPostProcessor，
+ *              会调用方法postProcessBeforeInstantiation（）】
+ *              1、先从缓存中获取当前bean，如果能获取到，说明以前被创建过，则可以直接使用；否则再创建
+ *                  只要创建好的bean都会被缓存起来。这种方式保证了整个容器的单实例机制。
+ *              2、createBean();创建bean
+ *              注：后置处理器的区分：【BeanPostProcessor是在Bean对象创建完成初始化前后调用】
+ *                               【InstantiationAwareBeanPostProcessor 是在创建Bean实例之前先尝试用后置处理器返回对象】
+ *                  1）解析BeforeInstantiation： resolveBeforeInstantiation(beanName, mbdToUse)
+ *                      希望后置处理器在此能返回一个代理对象；如果能返回就直接使用，不能就继续创建
+ *                      1、后置处理器先尝试返回对象；
+ *                          bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
+ *                          遍历所有后置处理器，若是 InstantiationAwareBeanPostProcessor，则执行 postProcessBeforeInstantiation
+         * 					if (bean != null) {
+         * 						bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
+ *                           }
+ *                  2）真正的创建一个bean实例：doCreateBean(beanName, mbdToUse, args)。整个过程同上3.4
+ *
  */
 @EnableAspectJAutoProxy
 @Configurable
