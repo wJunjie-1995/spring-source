@@ -6,11 +6,11 @@ package proxy;
  */
 public class Client {
     public static void main(String[] args) {
-        ManFactory aFatory = new Afactory();
+        ManFactory aFactory = new Afactory();
         WomanFactory bFactory = new Bfactory();
 
         Company company = new Company();
-        company.setFactory(aFatory);
+        company.setFactory(aFactory);
         ManFactory proxyInstance1 = (ManFactory) company.getProxyInstance();
         proxyInstance1.saleManTool(18);
 
