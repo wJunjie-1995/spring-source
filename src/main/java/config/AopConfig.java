@@ -122,6 +122,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  *              cglib动态代理 ObjenesisCglibAopProxy
  *      4）给容器返回当前组件使用cglib增强了的代理对象
  *      5）以后容器中获取到的就是这个组件的代理对象，执行目标方法的时候，代理对象就会执行通知方法的流程。
+ *  3、目标方法执行（mathCalculator.div()）
+ *      容器中保存了组件的代理对象（cglib增强后的），其中保存了详细信息：如增强器、目标方法等。
+ *
  */
 @EnableAspectJAutoProxy
 @Configurable
