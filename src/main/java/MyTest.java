@@ -76,5 +76,6 @@ public class MyTest {
                 new AnnotationConfigApplicationContext(AopConfig.class);
         MathCalculator mathCalculator = applicationContext.getBean(MathCalculator.class);
         mathCalculator.div(1,1);
+        mathCalculator.foo("sss");
     }
 }
