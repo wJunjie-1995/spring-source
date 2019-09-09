@@ -21,6 +21,8 @@ import java.util.Arrays;
  * target：目标对象类型
  *
  * 切入点之间可以有逻辑运算 如 && || ！
+ *
+ * 切面实例模型（默认是单实例的）
  */
 @Aspect
 public class LogAspects {
