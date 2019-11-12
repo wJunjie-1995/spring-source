@@ -1,5 +1,6 @@
 import bean.aop.MathCalculator;
 import config.*;
+import event.EmailService;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -7,6 +8,8 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import bean.autowire.BookDao;
 import bean.autowire.BookService;
 import bean.property.Liu;
+
+import java.lang.annotation.Target;
 
 /**
  * @author galileo
@@ -77,5 +80,13 @@ public class MyTest {
         MathCalculator mathCalculator = applicationContext.getBean(MathCalculator.class);
         mathCalculator.div(1,1);
         mathCalculator.foo("sss");
+    }
+
+    @Test
+    public void eventTest(){
+        applicationContext =
+                new AnnotationConfigApplicationContext(EventConfig.class);
+        EmailService emailService = (EmailService) applicationContext.getBean("emailService");
+        emailService.send("black");
     }
 }

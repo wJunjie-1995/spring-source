@@ -16,15 +16,18 @@ import org.springframework.util.StringValueResolver;
 public class Aware implements ApplicationContextAware, BeanNameAware, EmbeddedValueResolverAware {
 	private ApplicationContext applicationContext;
 
+	@Override
 	public void setBeanName(String name) {
 		System.out.println("bean name:"+name);
 	}
 
+	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		System.out.println("传入IOC："+applicationContext);
 		this.applicationContext = applicationContext;
 	}
 
+	@Override
 	public void setEmbeddedValueResolver(StringValueResolver resolver) {
 		String s = resolver.resolveStringValue("你好  ${os.name}");
 		System.out.println("解析："+s);
