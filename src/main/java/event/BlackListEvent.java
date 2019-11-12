@@ -1,7 +1,6 @@
 package event;
 
 import org.springframework.context.ApplicationEvent;
-import org.springframework.stereotype.Component;
 
 /**
  * @author galileo

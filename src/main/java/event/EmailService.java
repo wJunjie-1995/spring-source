@@ -11,13 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService implements ApplicationEventPublisherAware {
     private ApplicationEventPublisher publisher;
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.publisher = applicationEventPublisher;
     }
 
-    public void send(String name){
-        if ("black".equals(name)){
+    public void send(String name) {
+        if ("black".equals(name)) {
             //被订阅这发布消息
             publisher.publishEvent(new BlackListEvent(this, name));
             return;
