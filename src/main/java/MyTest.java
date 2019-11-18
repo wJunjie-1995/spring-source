@@ -3,6 +3,7 @@ import bean.autowire.BookDao;
 import bean.autowire.BookService;
 import bean.property.Liu;
 import config.*;
+import dependency.CommandManager;
 import event.EmailService;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -87,5 +88,18 @@ public class MyTest {
                 new AnnotationConfigApplicationContext(EventConfig.class);
         EmailService emailService = (EmailService) applicationContext.getBean("emailService");
         emailService.send("black");
+    }
+
+    @Test
+    public void dependencyTest() {
+        applicationContext =
+                new AnnotationConfigApplicationContext(DependencyConfig.class);
+//        for (String beanDefinitionName : applicationContext.getBeanDefinitionNames()) {
+//            System.out.println(beanDefinitionName);
+//        }
+        CommandManager commandManager = (CommandManager) applicationContext.getBean("commandManager");
+        commandManager.test();
+        commandManager.test();
+        commandManager.test();
     }
 }
