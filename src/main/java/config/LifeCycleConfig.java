@@ -26,7 +26,8 @@ import org.springframework.context.annotation.Scope;
  * （4）BeanPostProcessor后置处理器：
  *
  */
-@ComponentScan("bean")
+@ComponentScan("bean.lifecycle")
+
 public class LifeCycleConfig {
     @Bean(initMethod = "init", destroyMethod = "destroy")
     public ManuallySpecifiedInitAndDes car(){

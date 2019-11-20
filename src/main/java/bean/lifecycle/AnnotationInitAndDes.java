@@ -9,7 +9,7 @@ import javax.annotation.PreDestroy;
  * @author galileo
  * @date 2019/8/1 17:08
  */
-@Component
+
 public class AnnotationInitAndDes {
     public AnnotationInitAndDes() {
         System.out.println("注解方式 构造器");

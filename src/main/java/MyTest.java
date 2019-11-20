@@ -1,11 +1,13 @@
 import bean.aop.MathCalculator;
 import bean.autowire.BookDao;
 import bean.autowire.BookService;
+import bean.lifecycle.LifeCycleDemo;
 import bean.property.Liu;
 import config.*;
 import dependency.CommandManager;
 import event.EmailService;
 import org.junit.Test;
+import org.springframework.context.Lifecycle;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
@@ -94,12 +96,20 @@ public class MyTest {
     public void dependencyTest() {
         applicationContext =
                 new AnnotationConfigApplicationContext(DependencyConfig.class);
-//        for (String beanDefinitionName : applicationContext.getBeanDefinitionNames()) {
-//            System.out.println(beanDefinitionName);
-//        }
+
         CommandManager commandManager = (CommandManager) applicationContext.getBean("commandManager");
         commandManager.test();
         commandManager.test();
         commandManager.test();
+    }
+
+    @Test
+    public void LifeTest() {
+        applicationContext =
+                new AnnotationConfigApplicationContext(LifeCycleConfig.class);
+
+        applicationContext.start();
+
+        applicationContext.close();
     }
 }
